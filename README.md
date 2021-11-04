@@ -42,7 +42,7 @@ Your solution should meet all these requirements.
 
 These requirements are not required, but feel free to complete some of them if they seem interesting, or to come up with your own :)
 
-- [ ] Load questions from and save answers to a SQLite database.
+- [x] Load questions from and save answers to a SQLite database.
 
 - [ ] Evaluate the answers in some way and show a score to the candidate.
 

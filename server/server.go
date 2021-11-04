@@ -1,6 +1,7 @@
 package main
 
 import (
+	"homework-backend/db"
 	"homework-backend/graph"
 	"homework-backend/graph/generated"
 	"log"
@@ -18,6 +19,11 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
+	}
+
+	err := db.InitializeDB()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
