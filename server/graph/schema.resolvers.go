@@ -168,6 +168,57 @@ func (r *queryResolver) Questions(ctx context.Context) ([]model.Question, error)
 	return questions, nil
 }
 
+func (r *queryResolver) Results(ctx context.Context) (*model.Result, error) {
+	conn := db.Pool.Get(ctx)
+	if conn == nil {
+		return nil, errors.New("Failed to establish connection to db")
+	}
+	defer db.Pool.Put(conn)
+
+	stmt := conn.Prep(`SELECT * FROM answers;`)
+
+	totalQuestions := 0
+	correctAnswers := 0
+	var totalQuestionsWeight float64 = 0
+	var totalAnswersWeight float64 = 0
+
+	for {
+		if hasRow, err := stmt.Step(); err != nil {
+			return nil, err
+		} else if !hasRow {
+			break
+		}
+
+		questionWeight := stmt.GetFloat("questionWeight")
+		questionType := stmt.GetText("questionType")
+
+		totalQuestions++
+		totalQuestionsWeight += questionWeight
+
+		if questionType == "ChoiceQuestion" {
+			selectedOptionWeight := stmt.GetFloat("selectedOptionWeight")
+
+			if selectedOptionWeight != 0 {
+				totalAnswersWeight += questionWeight
+				correctAnswers++
+			}
+		} else if questionType == "TextQuestion" {
+			enteredText := stmt.GetText("enteredText")
+
+			if enteredText != "" {
+				totalAnswersWeight += questionWeight
+				correctAnswers++
+			}
+		}
+	}
+
+	return &model.Result{
+		TotalQuestions: totalQuestions,
+		CorrectAnswers: correctAnswers,
+		Score:          (totalAnswersWeight / totalQuestionsWeight) * 100,
+	}, nil
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 

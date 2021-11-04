@@ -34,6 +34,12 @@ type Option struct {
 	Weight float64 `json:"weight"`
 }
 
+type Result struct {
+	TotalQuestions int     `json:"totalQuestions"`
+	CorrectAnswers int     `json:"correctAnswers"`
+	Score          float64 `json:"score"`
+}
+
 type TextQuestion struct {
 	ID     string  `json:"id"`
 	Body   string  `json:"body"`

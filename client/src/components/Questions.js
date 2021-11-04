@@ -4,6 +4,7 @@ import TextQuestion from "./TextQuestion";
 import { useState, useEffect } from "react";
 import { sortByWeight } from "../utils";
 import { useToastContext } from "../contexts/toastContext";
+import { useNavigate } from "react-router-dom";
 
 export function Questions() {
   const [{ data, fetching, error }] = useQuery({ query });
@@ -11,6 +12,7 @@ export function Questions() {
   const [answers, setAnswers] = useState([]);
   const [, submitAnswers] = useMutation(sendAnswers);
   const toast = useToastContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data) {
@@ -39,6 +41,7 @@ export function Questions() {
         toast(`ERROR: ${result.error.message}`, 4000);
       } else {
         toast(result.data.submitAnswers.content, 3500);
+        navigate("/results");
       }
     });
   };
