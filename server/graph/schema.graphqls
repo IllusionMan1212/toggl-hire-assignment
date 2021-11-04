@@ -2,6 +2,10 @@ type Query {
   questions: [Question!]!
 }
 
+type Mutation {
+  submitAnswers(answers: [AnswerInput!]!): Message!
+}
+
 interface Question {
   id: ID!
   weight: Float!
@@ -24,5 +28,18 @@ type Option {
   id: ID!
   body: String!
   weight: Float!
+}
+
+input AnswerInput {
+  questionId: ID!
+  questionType: ID!
+  questionWeight: Float!
+  enteredText: String
+  selectedOptionId: ID
+  selectedOptionWeight: Float
+}
+
+type Message {
+  content: ID!
 }
 

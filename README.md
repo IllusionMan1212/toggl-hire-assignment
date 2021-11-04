@@ -16,13 +16,13 @@ Your solution should meet all these requirements.
 
 - [x] Return at least one choice and one text question from the API
 
-- [ ] Implement a mutation for submitting the answers.
+- [x] Implement a mutation for submitting the answers.
 
   For each question, the selected option ID or the entered text is submitted.
 
-- [ ] Validate the submitted answers (question and option IDs are correct, question types match, ...)
+- [x] Validate the submitted answers (question and option IDs are correct, question types match, ...)
 
-- [ ] Print the answers to stdout in a machine-readable format (JSON, CSV, ...)
+- [x] Print the answers to stdout in a machine-readable format (JSON, CSV, ...)
 
   For simplicity we can assume that stdout is written to a log file, which is then later processed.
 
@@ -30,13 +30,13 @@ Your solution should meet all these requirements.
 
 - [x] Show the questions and options to the user in some way.
 
-- [ ] Show the questions and options sorted by their `weight`.
+- [x] Show the questions and options sorted by their `weight`.
 
-- [ ] Implement UI to answer choice and text questions.
+- [x] Implement UI to answer choice and text questions.
 
     This can be similar to [how Toggl Hire does it](https://apply.hire.toggl.com/61VJ1QV7E1Z9ODJU2P2/practice). Note that there is no need to implement time limits or rating the questions.
 
-- [ ] Send the answer to the API and show a success message if everything goes well.
+- [x] Send the answer to the API and show a success message if everything goes well.
 
 ## Bonus requirements
 

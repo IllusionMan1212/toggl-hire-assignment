@@ -11,3 +11,74 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+label {
+  display: block;
+  cursor: pointer;
+}
+
+label > input[type="radio"] {
+  cursor: pointer;
+}
+
+textarea {
+  max-width: 100%;
+  width: 100%;
+  max-height: 100px;
+  height: 100px;
+  font-size: 16px;
+  resize: none;
+}
+
+.container {
+  margin: 0 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.question {
+  width: 100%;
+  margin: 50px 100px;
+}
+
+.option {
+  margin: 1rem 0;
+}
+
+.toasts {
+  display: flex;
+  height: fit-content;
+  height: -moz-fit-content;
+  width: fit-content;
+  width: -moz-fit-content;
+  position: fixed;
+  top: 20px;
+  z-index: 1000;
+  right: 20px;
+  max-width: 90%;
+  grid-gap: 10px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toast {
+  width: fit-content;
+  width: -moz-fit-content;
+  padding: 20px 25px;
+  background-color: #555;
+  transition: all 1s;
+  animation: slide-from-top 0.6s both;
+  color: white;
+}
+
+@keyframes slide-from-top {
+  0% {
+    transform: translateY(-30px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+

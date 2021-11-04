@@ -1,17 +1,101 @@
-import { gql, useQuery } from "urql";
+import { gql, useQuery, useMutation } from "urql";
+import ChoiceQuestion from "./ChoiceQuestion";
+import TextQuestion from "./TextQuestion";
+import { useState, useEffect } from "react";
+import { sortByWeight } from "../utils";
+import { useToastContext } from "../contexts/toastContext";
 
 export function Questions() {
   const [{ data, fetching, error }] = useQuery({ query });
+  const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [, submitAnswers] = useMutation(sendAnswers);
+  const toast = useToastContext();
+
+  useEffect(() => {
+    if (data) {
+      data.questions.sort(sortByWeight);
+      setQuestions(data.questions);
+
+      let initialAnswers = [];
+
+      data.questions.forEach((question) => {
+        initialAnswers = initialAnswers.concat({
+            questionId: question.id,
+            questionType: question.__typename,
+            questionWeight: question.weight,
+            enteredText: null,
+            selectedOptionId: null,
+            selectedOptionWeight: null
+        });
+      });
+      setAnswers(initialAnswers);
+    }
+  }, [data]);
+
+  const handleSubmit = () => {
+    submitAnswers({ "answers": answers }).then(result => {
+      if (result.error) {
+        toast(`ERROR: ${result.error.message}`, 4000);
+      } else {
+        toast(result.data.submitAnswers.content, 3500);
+      }
+    });
+  };
 
   if (fetching) return "Loading...";
   if (error) return `Error: ${error}`;
 
   return (
-    <code>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </code>
+    <div className="container">
+      {questions.map((question, index) => {
+        switch (question.__typename) {
+        case "ChoiceQuestion":
+            return (
+              <ChoiceQuestion
+                key={question.id}
+                body={question.body}
+                id={question.id}
+                type={question.__typename}
+                weight={question.weight}
+                options={question.options}
+                number={index + 1}
+                setAnswers={setAnswers}
+              />
+            );
+        case "TextQuestion":
+            return (
+              <TextQuestion
+                key={question.id}
+                body={question.body}
+                id={question.id}
+                weight={question.weight}
+                options={question.options}
+                number={index + 1}
+                setAnswers={setAnswers}
+              />
+            );
+        default:
+            return (
+              <div>Invalid question type</div>
+            );
+        }
+      })}
+
+      <div>
+        <button onClick={handleSubmit}>Submit your answers</button>
+      </div>
+    </div>
   );
 }
+
+const sendAnswers = gql`
+  mutation($answers: [AnswerInput!]!) {
+    submitAnswers(answers: $answers) {
+      content
+    }
+  }
+`;
 
 const query = gql`
   query {
